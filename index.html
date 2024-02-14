@@ -3,6 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Каталог товаров</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 300px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        .product-card img {
+            max-width: 100%;
+            display: block;
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .product-price {
+            color: #007BFF;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div id="products"></div>
@@ -13,10 +50,24 @@
         .then(data => {
           const productsElement = document.getElementById('products');
           data.forEach(product => {
-            productsElement.innerHTML += `<div><h3>${product.Name}</h3><p>${product.Description}</p><p>Цена: ${product.Price}</p><img src="${product['Image URL']}" alt="${product.Name}" /></div>`;
+            const productCard = `
+              <a href="${product['Product Link'] || '#'}" class="product-card">
+                <img src="${product['Image URL']}" alt="${product.Name}" />
+                <div class="product-info">
+                  <h3>${product.Name}</h3>
+                  <p>${product.Description}</p>
+                  <p class="product-price">Цена: ${product.Price}</p>
+                </div>
+              </a>
+            `;
+            productsElement.innerHTML += productCard;
           });
         })
         .catch(error => console.error('Ошибка:', error));
     </script>
 </body>
 </html>
+
+
+
+
