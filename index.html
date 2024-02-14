@@ -2,97 +2,114 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Каталог товаров</title>
+    <title>Фильтрация товаров</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             padding: 20px;
             background-color: #f4f4f4;
         }
-        #logo {
-            display: block;
+        .filter-select, .brand-filter {
             margin-bottom: 20px;
-            max-width: 200px;
-        }
-        .category-select {
-            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
         }
         #products {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            justify-content: space-around;
         }
         .product-card {
             background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 300px;
-            overflow: hidden;
-            cursor: pointer;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
-        .product-card:hover {
-            transform: translateY(-10px);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: calc(33.333% - 20px);
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .product-card img {
             max-width: 100%;
-            display: block;
-        }
-        .product-info {
-            padding: 15px;
+            height: auto;
+            margin-bottom: 8px;
         }
         .product-price {
-            color: #007BFF;
+            color: #105a83;
             font-weight: bold;
-        }
-        .buy-btn {
-            display: block;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-align: center;
-            width: auto;
-            margin: 10px auto; /* Center the button inside the .product-info */
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
-    <select class="category-select">
-        <option value="all">Все категории</option>
-        <option value="category1">Одежда</option>
-        <option value="category2">Обувь</option>
-        <!-- Добавьте свои категории здесь -->
-    </select>
 
-    <div id="products"></div>
+<h1>Каталог товаров</h1>
 
-    <script>
-        fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
-            .then(response => response.json())
-            .then(data => {
-                const productsElement = document.getElementById('products');
-                data.forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.classList.add('product-card');
-                    productCard.innerHTML = `
-                        <img src="${product['Image URL']}" alt="${product.Name}">
-                        <div class="product-info">
-                            <h3>${product.Name}</h3>
-                            <p>${product.Description}</p>
-                            <p class="product-price">Цена: ${product.Price}</p>
-                            <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
-                        </div>
-                    `;
+<label for="brandFilter">Выберите бренд:</label>
+<select id="brandFilter" class="brand-filter">
+    <option value="all">Все бренды</option>
+    <!-- Бренды будут добавлены здесь -->
+</select>
 
-                    // Больше не нужен обработчик кликов для всей карточки
-                    productsElement.appendChild(productCard);
-                });
-            })
-            .catch(error => console.error('Ошибка:', error));
-    </script>
+<div id="products">
+    <!-- Товары будут отображаться здесь -->
+</div>
+
+<script>
+    async function fetchProducts() {
+        try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec');
+            const products = await response.json();
+            displayProducts(products);
+            populateBrands(products);
+        } catch (error) {
+            console.error('Ошибка получения данных:', error);
+        }
+    }
+
+    function displayProducts(products) {
+        const productsContainer = document.getElementById('products');
+        productsContainer.innerHTML = '';
+
+        products.forEach(product => {
+            const productHTML = `
+                <div class="product-card">
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p class="product-price">${product.price}</p>
+                </div>
+            `;
+            productsContainer.innerHTML += productHTML;
+        });
+    }
+
+    function populateBrands(products) {
+        const brandFilter = document.getElementById('brandFilter');
+        const brands = new Set(products.map(product => product.brand));
+
+        brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand;
+            option.textContent = brand;
+            brandFilter.appendChild(option);
+        });
+    }
+
+    document.getElementById('brandFilter').addEventListener('change', function() {
+        const selectedBrand = this.value;
+        fetchProducts().then(products => {
+            if (selectedBrand === 'all') {
+                displayProducts(products);
+            } else {
+                const filteredProducts = products.filter(product => product.brand === selectedBrand);
+                displayProducts(filteredProducts);
+            }
+        });
+    });
+
+    fetchProducts();
+</script>
 </body>
 </html>
+
+
+
