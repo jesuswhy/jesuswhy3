@@ -15,7 +15,7 @@
             max-width: 200px;
         }
         .category-select {
-            margin-bottom: 40px;
+            margin-bottom: 10px;
         }
         #products {
             display: flex;
@@ -61,50 +61,64 @@
     </style>
 </head>
 <body>
-    <select class="category-select">
+    <select id="category-select" class="category-select">
         <option value="all">Все категории</option>
-        <option value="category1">Одежда</option>
-        <option value="category2">Обувь</option>
-        <option value="category3">Аксуссуары</option>
-        <option value="category4">Белье</option>
-        <option value="category5">Парфюм</option>
+        <option value="Одежда">Одежда</option>
+        <option value="Обувь">Обувь</option>
+        <option value="Аксуссуары">Аксуссуары</option>
+        <option value="Белье">Белье</option>
+        <option value="Парфюм">Парфюм</option>
         <!-- Добавьте свои категории здесь -->
     </select>
 
-    <select class="category-select">
+    <select id="brand-select" class="category-select">
         <option value="all">Все бренды</option>
-        <option value="category1">Balenciaga</option>
-        <option value="category2">Hugo Boss</option>
-        <option value="category3">Armani</option>
-        <option value="category4">Zara</option>
-        <option value="category5">Одуванчик</option>
+        <option value="Balenciaga">Balenciaga</option>
+        <option value="Hugo Boss">Hugo Boss</option>
+        <option value="Armani">Armani</option>
+        <option value="Zara">Zara</option>
+        <option value="Одуванчик">Одуванчик</option>
         <!-- Добавьте свои категории здесь -->
     </select>
 
     <div id="products"></div>
 
     <script>
-        fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
-            .then(response => response.json())
-            .then(data => {
-                const productsElement = document.getElementById('products');
-                data.forEach(product => {
-                    const productCard = document.createElement('div');
-                    productCard.classList.add('product-card');
-                    productCard.innerHTML = `
-                        <img src="${product['Image URL']}" alt="${product.Name}">
-                        <div class="product-info">
-                            <h3>${product.Name}</h3>
-                            <p class="product-price">Цена: ${product.Price}</p>
-                            <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
-                        </div>
-                    `;
+        document.getElementById('category-select').addEventListener('change', filterProducts);
+        document.getElementById('brand-select').addEventListener('change', filterProducts);
 
-                    // Больше не нужен обработчик кликов для всей карточки
-                    productsElement.appendChild(productCard);
-                });
-            })
-            .catch(error => console.error('Ошибка:', error));
+        function filterProducts() {
+            const category = document.getElementById('category-select').value;
+            const brand = document.getElementById('brand-select').value;
+
+            fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
+                .then(response => response.json())
+                .then(data => {
+                    const productsElement = document.getElementById('products');
+                    productsElement.innerHTML = ''; // Clear previous products
+
+                    data.forEach(product => {
+                        if ((category === 'all' || product.Category === category) &&
+                            (brand === 'all' || product.Brand === brand)) {
+                            const productCard = document.createElement('div');
+                            productCard.classList.add('product-card');
+                            productCard.innerHTML = `
+                                <img src="${product['Image URL']}" alt="${product.Name}">
+                                <div class="product-info">
+                                <h3>${product.Name}</h3>
+                                    <p class="product-price">Цена: ${product.Price}</p>
+                                    <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                                </div>
+                            `;
+                            productsElement.appendChild(productCard);
+                        }
+                    });
+                })
+                .catch(error => console.error('Ошибка:', error));
+        }
+
+        // Initial call to load all products
+        filterProducts();
     </script>
 </body>
 </html>
