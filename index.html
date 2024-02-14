@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Каталог товаров</title>
@@ -8,6 +8,14 @@
             font-family: 'Arial', sans-serif;
             padding: 20px;
             background-color: #f4f4f4;
+        }
+        #logo {
+            display: block;
+            margin-bottom: 20px;
+            max-width: 200px;
+        }
+        .category-select {
+            margin-bottom: 20px;
         }
         #products {
             display: flex;
@@ -39,9 +47,26 @@
             color: #007BFF;
             font-weight: bold;
         }
+        .buy-btn {
+            display: block;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 10px auto;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <img id="logo" src="https://disk.yandex.ru/i/7zJbM5mdn-Vrug" alt="Логотип">
+    <select class="category-select">
+        <option value="all">Все категории</option>
+        <option value="category1">Категория 1</option>
+        <option value="category2">Категория 2</option>
+        <!-- Добавьте свои категории здесь -->
+    </select>
+    
     <div id="products"></div>
 
     <script>
@@ -50,25 +75,26 @@
         .then(data => {
           const productsElement = document.getElementById('products');
           data.forEach(product => {
-            const productCard = `
-              <a href="https://t.me/creed_aventuz" class="product-card" target="_blank">
+            const productCard = document.createElement('div');
+            productCard.classList.add('product-card');
+            productCard.innerHTML = `
                 <img src="${product['Image URL']}" alt="${product.Name}" />
                 <div class="product-info">
                   <h3>${product.Name}</h3>
                   <p>${product.Description}</p>
                   <p class="product-price">Цена: ${product.Price}</p>
+                  <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
                 </div>
-              </a>
             `;
-            productsElement.innerHTML += productCard;
+            productCard.onclick = function(event) {
+              event.preventDefault();
+              // Развертывание карточки товара или другая логика
+            };
+            productsElement.appendChild(productCard);
           });
         })
         .catch(error => console.error('Ошибка:', error));
     </script>
 </body>
 </html>
-
-
-
-
 
