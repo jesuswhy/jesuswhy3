@@ -1,43 +1,120 @@
-let foundProducts = false;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог товаров</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #logo {
+            display: block;
+            margin-bottom: 20px;
+            max-width: 200px;
+        }
+        .category-select {
+            margin-bottom: 10px;
+        }
+        #products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 300px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        .product-card img {
+            max-width: 100%;
+            display: block;
+        }
+        .product-info {
+            padding: 15px;
+        }
+        .product-price {
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .buy-btn {
+            display: block;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            width: auto;
+            margin: 10px auto; /* Center the button inside the .product-info */
+        }
+    </style>
+</head>
+<body>
+    <select id="category-select" class="category-select">
+        <option value="all">Все категории</option>
+        <option value="Одежда">Одежда</option>
+        <option value="Обувь">Обувь</option>
+        <option value="Аксуссуары">Аксуссуары</option>
+        <option value="Белье">Белье</option>
+        <option value="Парфюм">Парфюм</option>
+        <!-- Добавьте свои категории здесь -->
+    </select>
+
+    <select id="brand-select" class="category-select">
+        <option value="all">Все бренды</option>
+        <option value="Balenciaga">Balenciaga</option>
+        <option value="Hugo Boss">Hugo Boss</option>
+        <option value="Armani">Armani</option>
+        <option value="Zara">Zara</option>
+        <option value="Одуванчик">Одуванчик</option>
+        <!-- Добавьте свои категории здесь -->
+    </select>
+
+    <div id="products"></div>
+
+    <script>
+        document.getElementById('category-select').addEventListener('change', filterProducts);
+        document.getElementById('brand-select').addEventListener('change', filterProducts);
+
+        function filterProducts() {
+            const category = document.getElementById('category-select').value;
+            const brand = document.getElementById('brand-select').value;
+
+            fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
+                .then(response => response.json())
+                .then(data => {
+                    const productsElement = document.getElementById('products');
+                    productsElement.innerHTML = ''; // Clear previous products
 
                     data.forEach(product => {
                         if ((category === 'all' || product.Category === category) &&
                             (brand === 'all' || product.Brand === brand)) {
-                            foundProducts = true;
                             const productCard = document.createElement('div');
                             productCard.classList.add('product-card');
-                            productCard.innerHTML = 
+                            productCard.innerHTML = `
                                 <img src="${product['Image URL']}" alt="${product.Name}">
-                            ;
-                            productCard.addEventListener('click', () => openProductModal(product));
+                                <div class="product-info">
+                                <h3>${product.Name}</h3>
+                                    <p class="product-price">Цена: ${product.Price}</p>
+                                    <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                                </div>
+                            `;
                             productsElement.appendChild(productCard);
                         }
                     });
-
-                    const noProductsMessage = document.getElementById('no-products');
-                    noProductsMessage.style.display = foundProducts ? 'none' : 'block';
                 })
                 .catch(error => console.error('Ошибка:', error));
-        }
-
-        // Function to open product modal
-        function openProductModal(product) {
-            const modal = document.getElementById('product-modal');
-            const modalContent = document.getElementById('modal-content');
-            modalContent.innerHTML = 
-                <img src="${product['Image URL']}" alt="${product.Name}">
-                <div class="product-info">
-                    <h3>${product.Name}</h3>
-                    <p class="product-price">Цена: ${product.Price}</p>
-                    <button class="buy-btn">Купить</button>
-                </div>
-            ;
-            modal.style.display = 'block';
-
-            // Close modal when close button is clicked
-            document.querySelector('.close-modal').addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
         }
 
         // Initial call to load all products
