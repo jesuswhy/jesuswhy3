@@ -53,47 +53,47 @@
             color: white;
             text-decoration: none;
             padding: 10px 20px;
-            margin: 10px auto;
             border-radius: 5px;
+            text-align: center;
+            width: auto;
+            margin: 10px auto; /* Center the button inside the .product-info */
         }
     </style>
 </head>
 <body>
+    <img id="logo" src="https://i.ibb.co/BBb7XRw/IMG-20240214-074635-671.jpg" alt="Логотип">
     <select class="category-select">
         <option value="all">Все категории</option>
         <option value="category1">Одежда</option>
         <option value="category2">Обувь</option>
         <!-- Добавьте свои категории здесь -->
     </select>
-    
+
     <div id="products"></div>
 
     <script>
-      fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
-        .then(response => response.json())
-        .then(data => {
-          const productsElement = document.getElementById('products');
-          data.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.classList.add('product-card');
-            productCard.innerHTML = `
-                <img src="${product['Image URL']}" alt="${product.Name}" />
-                <div class="product-info">
-                  <h3>${product.Name}</h3>
-                  <p>${product.Description}</p>
-                  <p class="product-price">Цена: ${product.Price}</p>
-                  <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
-               </div>
-            `;
-            productCard.onclick = function(event) {
-              event.preventDefault();
-              // Развертывание карточки товара или другая логика
-            };
-            productsElement.appendChild(productCard);
-          });
-        })
-        .catch(error => console.error('Ошибка:', error));
+        fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
+            .then(response => response.json())
+            .then(data => {
+                const productsElement = document.getElementById('products');
+                data.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    productCard.innerHTML = `
+                        <img src="${product['Image URL']}" alt="${product.Name}">
+                        <div class="product-info">
+                            <h3>${product.Name}</h3>
+                            <p>${product.Description}</p>
+                            <p class="product-price">Цена: ${product.Price}</p>
+                            <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                        </div>
+                    `;
+
+                    // Больше не нужен обработчик кликов для всей карточки
+                    productsElement.appendChild(productCard);
+                });
+            })
+            .catch(error => console.error('Ошибка:', error));
     </script>
 </body>
 </html>
-
