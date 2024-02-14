@@ -72,12 +72,6 @@
             right: 10px;
             cursor: pointer;
         }
-        .no-products {
-            font-size: 20px;
-            color: #888;
-            text-align: center;
-            margin-top: 50px;
-        }
     </style>
 </head>
 <body>
@@ -108,8 +102,6 @@
         <div id="modal-content"></div>
     </div>
 
-    <div id="no-products" class="no-products" style="display: none;">Нет товаров, подходящих под выбранные параметры</div>
-
     <script>
         document.getElementById('category-select').addEventListener('change', filterProducts);
         document.getElementById('brand-select').addEventListener('change', filterProducts);
@@ -123,12 +115,10 @@
                 .then(data => {
                     const productsElement = document.getElementById('products');
                     productsElement.innerHTML = ''; // Clear previous products
-                      let foundProducts = false;
 
                     data.forEach(product => {
                         if ((category === 'all' || product.Category === category) &&
                             (brand === 'all' || product.Brand === brand)) {
-                            foundProducts = true;
                             const productCard = document.createElement('div');
                             productCard.classList.add('product-card');
                             productCard.innerHTML = 
@@ -138,9 +128,6 @@
                             productsElement.appendChild(productCard);
                         }
                     });
-
-                    const noProductsMessage = document.getElementById('no-products');
-                    noProductsMessage.style.display = foundProducts ? 'none' : 'block';
                 })
                 .catch(error => console.error('Ошибка:', error));
         }
