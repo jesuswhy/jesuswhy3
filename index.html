@@ -113,11 +113,19 @@
 
                             const productInfo = document.createElement('div');
                             productInfo.classList.add('product-info');
-                            productInfo.innerHTML = 
-                                <h3>${product.Name}</h3>
-                                <p class="product-price">Цена: ${product.Price}</p>
-                                <a href="https://t.me/your_telegram_chat?text=Здесь_ваше_сообщение_с_id_товара" target="_blank" class="buy-btn">Купить</a>
-                            ;
+                            const productName = document.createElement('h3');
+                            productName.textContent = product.Name;
+                            productInfo.appendChild(productName);
+                            const productPrice = document.createElement('p');
+                            productPrice.classList.add('product-price');
+                            productPrice.textContent = Цена: ${product.Price};
+                            productInfo.appendChild(productPrice);
+                            const buyBtn = document.createElement('a');
+                            buyBtn.href = https://t.me/your_telegram_chat?text=${encodeURIComponent('Здесь_ваше_сообщение_с_id_товара')};
+                            buyBtn.target = '_blank';
+                            buyBtn.classList.add('buy-btn');
+                            buyBtn.textContent = 'Купить';
+                            productInfo.appendChild(buyBtn);
                             productCard.appendChild(productInfo);
 
                             productsElement.appendChild(productCard);
