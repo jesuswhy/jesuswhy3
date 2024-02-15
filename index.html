@@ -81,15 +81,24 @@
         <!-- Добавьте свои категории здесь -->
     </select>
 
+    <select id="gender-select" class="category-select">
+        <option value="all">Все полы</option>
+        <option value="male">Мужской</option>
+        <option value="female">Женский</option>
+        <!-- Добавьте другие варианты пола, если необходимо -->
+    </select>
+
     <div id="products"></div>
 
     <script>
         document.getElementById('category-select').addEventListener('change', filterProducts);
         document.getElementById('brand-select').addEventListener('change', filterProducts);
+        document.getElementById('gender-select').addEventListener('change', filterProducts);
 
         function filterProducts() {
             const category = document.getElementById('category-select').value;
             const brand = document.getElementById('brand-select').value;
+            const gender = document.getElementById('gender-select').value;
 
             fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
                 .then(response => response.json())
@@ -98,18 +107,18 @@
                     productsElement.innerHTML = ''; // Clear previous products
 
                     data.forEach(product => {
-                        if ((category === 'all' || product.Category === category) &&
-                            (brand === 'all' || product.Brand === brand)) {
+                        if ((category === 'all' || product.Category === category) &&(brand === 'all' || product.Brand === brand) &&
+                            (gender === 'all' || product.Gender === gender)) {
                             const productCard = document.createElement('div');
                             productCard.classList.add('product-card');
-                            productCard.innerHTML = `
-                                <img src="${product['Image URL']}" alt="${product.Name}">
+                            productCard.innerHTML = 
+                                <img src="${product['Image URL 1']}" alt="${product.Name}">
                                 <div class="product-info">
-                                <h3>${product.Name}</h3>
+                                    <h3>${product.Name}</h3>
                                     <p class="product-price">Цена: ${product.Price}</p>
-                                    <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                                    <a href="https://t.me/your_telegram_chat?text=Здесь_ваше_сообщение_с_id_товара" target="_blank" class="buy-btn">Купить</a>
                                 </div>
-                            `;
+                            ;
                             productsElement.appendChild(productCard);
                         }
                     });
