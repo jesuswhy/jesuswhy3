@@ -9,11 +9,6 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-        #logo {
-            display: block;
-            margin-bottom: 20px;
-            max-width: 200px;
-        }
         .category-select {
             margin-bottom: 10px;
         }
@@ -107,18 +102,24 @@
                     productsElement.innerHTML = ''; // Clear previous products
 
                     data.forEach(product => {
-                        if ((category === 'all' || product.Category === category) &&(brand === 'all' || product.Brand === brand) &&
+                        if ((category === 'all' || product.Category === category) &&
+                            (brand === 'all' || product.Brand === brand) &&
                             (gender === 'all' || product.Gender === gender)) {
                             const productCard = document.createElement('div');
-                            productCard.classList.add('product-card');
-                            productCard.innerHTML = 
-                                <img src="${product['Image URL 1']}" alt="${product.Name}">
-                                <div class="product-info">
-                                    <h3>${product.Name}</h3>
-                                    <p class="product-price">Цена: ${product.Price}</p>
-                                    <a href="https://t.me/your_telegram_chat?text=Здесь_ваше_сообщение_с_id_товара" target="_blank" class="buy-btn">Купить</a>
-                                </div>
+                            productCard.classList.add('product-card');const productImage = document.createElement('img');
+                            productImage.src = product['Image URL 1'];
+                            productImage.alt = product.Name;
+                            productCard.appendChild(productImage);
+
+                            const productInfo = document.createElement('div');
+                            productInfo.classList.add('product-info');
+                            productInfo.innerHTML = 
+                                <h3>${product.Name}</h3>
+                                <p class="product-price">Цена: ${product.Price}</p>
+                                <a href="https://t.me/your_telegram_chat?text=Здесь_ваше_сообщение_с_id_товара" target="_blank" class="buy-btn">Купить</a>
                             ;
+                            productCard.appendChild(productInfo);
+
                             productsElement.appendChild(productCard);
                         }
                     });
