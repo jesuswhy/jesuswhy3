@@ -58,12 +58,6 @@
             width: auto;
             margin: 10px auto; /* Center the button inside the .product-info */
         }
-        .product-detail {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-top: 1px solid #ccc;
-            text-align: left;
-        }
     </style>
 </head>
 <body>
@@ -93,26 +87,12 @@
         document.getElementById('category-select').addEventListener('change', filterProducts);
         document.getElementById('brand-select').addEventListener('change', filterProducts);
 
-        function clickHandler(product, element) {
-            return () => {
-                const productDetail = document.createElement('div');
-                productDetail.classList.add('product-detail');
-                productDetail.innerHTML =
-                    '<h3>' + product.Name + '</h3>' +
-                    '<p>' + product.Description + '</p>' +
-                    '<p class="product-price">Цена: ' + product.Price + '</p>' +
-                    '<a href="' + product['Image URL'] + '" target="_blank">Подробнее</a>';
-                element.appendChild(productDetail);
-                element.removeEventListener('click', clickHandler); // Remove event listener after click
-            };
-        }
-
         function filterProducts() {
             const category = document.getElementById('category-select').value;
             const brand = document.getElementById('brand-select').value;
 
             fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
-            .then(response => response.json())
+                .then(response => response.json())
                 .then(data => {
                     const productsElement = document.getElementById('products');
                     productsElement.innerHTML = ''; // Clear previous products
@@ -122,17 +102,14 @@
                             (brand === 'all' || product.Brand === brand)) {
                             const productCard = document.createElement('div');
                             productCard.classList.add('product-card');
-                            productCard.innerHTML =
-                                '<img src="' + product['Image URL'] + '" alt="' + product.Name + '">' +
-                                '<div class="product-info">' +
-                                '<h3>' + product.Name + '</h3>' +
-                                '<p class="product-price">Цена: ' + product.Price + '</p>' +
-                                '<a href="javascript:void(0);" class="buy-btn">Подробнее</a>' +
-                                '</div>';
-                            productCard.addEventListener('click', function() {
-                                clickHandler(product, productCard)();
-                                productCard.removeEventListener('click', arguments.callee); // Remove event listener after click
-                            });
+                            productCard.innerHTML = `
+                                <img src="${product['Image URL']}" alt="${product.Name}">
+                                <div class="product-info">
+                                <h3>${product.Name}</h3>
+                                    <p class="product-price">Цена: ${product.Price}</p>
+                                    <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                                </div>
+                            `;
                             productsElement.appendChild(productCard);
                         }
                     });
