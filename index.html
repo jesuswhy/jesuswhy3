@@ -94,7 +94,7 @@
         document.getElementById('brand-select').addEventListener('change', filterProducts);
 
         function clickHandler(product) {
-            return function() {
+            return () => {
                 const productDetail = document.createElement('div');
                 productDetail.classList.add('product-detail');
                 productDetail.innerHTML =
