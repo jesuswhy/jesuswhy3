@@ -9,6 +9,11 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
+        #logo {
+            display: block;
+            margin-bottom: 20px;
+            max-width: 200px;
+        }
         .category-select {
             margin-bottom: 10px;
         }
@@ -53,22 +58,6 @@
             width: auto;
             margin: 10px auto; /* Center the button inside the .product-info */
         }
-        .product-images {
-            display: flex;
-            overflow-x: auto;
-            scrollbar-width: none; /* Для Firefox */
-            -ms-overflow-style: none; /* Для Internet Explorer/Edge */
-        }
-
-        .product-images::-webkit-scrollbar {
-            display: none; /* Скрыть полосу прокрутки для Chrome/Safari/Opera */
-        }
-
-        .product-images img {
-            max-width: 100%;
-            height: auto;
-            margin-right: 10px; /* Расстояние между изображениями */
-        }
     </style>
 </head>
 <body>
@@ -92,69 +81,44 @@
         <!-- Добавьте свои категории здесь -->
     </select>
 
-    <select id="gender-select" class="category-select">
+  <select id="gender-select" class="category-select">
         <option value="all">Все полы</option>
         <option value="male">Мужской</option>
         <option value="female">Женский</option>
         <!-- Добавьте другие варианты пола, если необходимо -->
     </select>
 
+
     <div id="products"></div>
 
     <script>
         document.getElementById('category-select').addEventListener('change', filterProducts);
         document.getElementById('brand-select').addEventListener('change', filterProducts);
-        document.getElementById('gender-select').addEventListener('change', filterProducts);
 
         function filterProducts() {
             const category = document.getElementById('category-select').value;
             const brand = document.getElementById('brand-select').value;
-            const gender = document.getElementById('gender-select').value;
+const gender = document.getElementById('gender-select').value;
 
             fetch('https://script.google.com/macros/s/AKfycbxqHUnKZ-5mCTcRsftNaTNeFnJc_Lc5MTR8rKtEOfUTBX6wK9Fgt-CHMPKOa1ieGA9C_w/exec')
-            .then(response => response.json())
+                .then(response => response.json())
                 .then(data => {
                     const productsElement = document.getElementById('products');
                     productsElement.innerHTML = ''; // Clear previous products
 
                     data.forEach(product => {
                         if ((category === 'all' || product.Category === category) &&
-                            (brand === 'all' || product.Brand === brand) &&
-                            (gender === 'all' || product.Gender === gender)) {
+                            (brand === 'all' || product.Brand === brand)) {
                             const productCard = document.createElement('div');
                             productCard.classList.add('product-card');
-
-                            const productImagesContainer = document.createElement('div');
-                            productImagesContainer.classList.add('product-images');
-
-                            for (let i = 1; i <= 5; i++) {
-                                if (product[Image URL ${i}]) {
-                                    const productImage = document.createElement('img');
-                                    productImage.src = product[Image URL ${i}];
-                                    productImage.alt = product.Name;
-                                    productImagesContainer.appendChild(productImage);
-                                }
-                            }
-
-                            productCard.appendChild(productImagesContainer);
-
-                            const productInfo = document.createElement('div');
-                            productInfo.classList.add('product-info');
-                            const productName = document.createElement('h3');
-                            productName.textContent = product.Name;
-                            productInfo.appendChild(productName);
-                            const productPrice = document.createElement('p');
-                            productPrice.classList.add('product-price');
-                            productPrice.textContent = 'Цена: ' + product.Price;
-                            productInfo.appendChild(productPrice);
-                            const buyBtn = document.createElement('a');
-                            buyBtn.href = 'https://t.me/your_telegram_chat?text=' + encodeURIComponent('Здесь_ваше_сообщение_с_id_товара');
-                            buyBtn.target = '_blank';
-                            buyBtn.classList.add('buy-btn');
-                            buyBtn.textContent = 'Купить';
-                            productInfo.appendChild(buyBtn);
-                            productCard.appendChild(productInfo);
-
+                            productCard.innerHTML = `
+                                <img src="${product['Image URL']}" alt="${product.Name}">
+                                <div class="product-info">
+                                <h3>${product.Name}</h3>
+                                    <p class="product-price">Цена: ${product.Price}</p>
+                                    <a href="https://t.me/creed_aventuz" target="_blank" class="buy-btn">Купить</a>
+                                </div>
+                            `;
                             productsElement.appendChild(productCard);
                         }
                     });
