@@ -93,7 +93,7 @@
         document.getElementById('category-select').addEventListener('change', filterProducts);
         document.getElementById('brand-select').addEventListener('change', filterProducts);
 
-        function clickHandler(product) {
+        function clickHandler(product, element) {
             return () => {
                 const productDetail = document.createElement('div');
                 productDetail.classList.add('product-detail');
@@ -102,8 +102,8 @@
                     '<p>' + product.Description + '</p>' +
                     '<p class="product-price">Цена: ' + product.Price + '</p>' +
                     '<a href="' + product['Image URL'] + '" target="_blank">Подробнее</a>';
-                this.appendChild(productDetail);
-                this.removeEventListener('click', clickHandler); // Remove event listener after click
+                element.appendChild(productDetail);
+                element.removeEventListener('click', clickHandler); // Remove event listener after click
             };
         }
 
@@ -130,7 +130,7 @@
                                 '<a href="javascript:void(0);" class="buy-btn">Подробнее</a>' +
                                 '</div>';
                             productCard.addEventListener('click', function() {
-                                clickHandler(product)();
+                                clickHandler(product, productCard)();
                                 productCard.removeEventListener('click', arguments.callee); // Remove event listener after click
                             });
                             productsElement.appendChild(productCard);
